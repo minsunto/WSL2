@@ -1,0 +1,78 @@
+
+WSL2에서 jupyter note book 설정 방법
+-------------------------------------------
+WSL2(Windows Subsystem for Linux 2)는 최신 가상화 기술을 
+사용하여 간단한 유틸리티 VM(가상 머신)내에서 Linux 커널을 실행. 
+but, WSL2는 기존 VM 환경이 아니고 windows OS 와 liunx OS를 
+통합한 환경을 제공 
+아래 4단계를 진행하면, windows와 통합된 linux 환경에서 jupyter notebook 사용이 
+가능하며, tensorflow Library를 호출하여 ML 작업을 진행 가능.
+또한, 빠른 data 처리를 위하여 GPU를 최대 활용할 수 있는 CUDA Toolkit 적용도 가능 
+
+##WSL 설치 안된 경우 
+1. WSL 설치 
+--------------
+윈도우 하단의 검색--> windows powershell
+(마우스 오른쪽버튼 누르고 관리자 권한으로 실행) 
+
+PS C:\WINDOWS\system32> wsl --install
+proceed for a few minutes...
+
+rebooting...
+## 재부팅하면 ubuntu 자동으로 설치 됨.
+proceed for a few minutes...
+
+2. jupyter notebook 설치 
+----------------------------
+windows 환경에서 새로 설치된 ubuntu 아이콘 클릭!!
+## ubuntu 환경으로 진입하여 liunx명령어로 설치. 
+
+$ sudo apt-get update
+## sudo apt-get upgrade python3 
+$ sudo apt install python3-pip  ## python 버젼 pip 설치
+$ pip3 --version    
+$ pip3 install jupyter    ## jupyter notebook 설치
+
+rebooting...
+
+3. jupyter notebook 실행
+----------------------------
+WCL2 환경(ubuntu)으로 진입 
+$ jupyter notebook  ## linux 환경에서 기동  
+
+## 화면이 스크롤 되어 화면을 볼 수 없는 경우 다른 창 띄워서, 아래의 URL을 검색
+$ jupyter notebook list
+아래와 같이 표시되면, 
+http://localhost:8888/?token=300f2a1b2509ea4a08d2794...  <-- copy하여
+
+## PC환경
+PC 환경의 browser(edge or chrome)에 복사 후, 
+browser 기반의 jupyter notebook 환경으로 진입한다. 
+
+4. Tensorflow 환경구성
+-------------------------
+ (기 설치된 ubuntu 환경에서는 python3가 이미 설치되어 있으며, 
+tensorflow를 사용하기 위해서는 아래 작업이 필요.)
+##tensorflow 환경 구성
+$ sudo apt update
+$ sudo apt install python3-dev python3-pip python3-venv 
+	 ##python3-dev : 고성능을 위한 Python C 확장 포함(mark-up lxml 관련)
+	 ##python3-pip : 패키지 소프트웨어를 설치, 관리하는 패키지관리 시스템 
+ 	 ##python3-venv : 가상환경 생성 	
+
+1)가상환경설정 (권장사항) 생략하여도 됨. 
+## directory 생성 $ mkdir TS    
+$ python3 -m venv --system-site-packages .TS
+$ source .TS/bin/activate 
+$ (TS) pip install --upgrade tensorflow
+$ (TS)python -c "import tensorflow as tf;
+print(tf.reduce_sum(tf.random.normal([500, 500])))"  ##설치 확인 
+$ (TS) deactivate  # don't exit until you're done using TensorFlow 종료
+
+2)real 환경설정 (필수사항)
+## ubuntu 환경
+$ pip3 install --user --upgrade tensorflow  # install in $HOME
+$python3 -c "import tensorflow as tf; 
+$ print(tf.reduce_sum(tf.random.normal([500, 500])))" <-- print 되면 ok!!
+
+create by SH.
